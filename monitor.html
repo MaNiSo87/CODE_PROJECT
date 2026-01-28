@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moss Mosaiq - Smart Monitoring System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="header-content">
+            <div class="logo">
+                Moss Mosaiq
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <!-- Water Level -->
+            <div class="card col-4">
+                <div class="card-header">
+                    <span class="card-icon">💧</span>
+                    <h2 class="card-title">Water Container</h2>
+                </div>
+                <div class="water-container">
+                    <div class="water-fill" id="waterFill">
+                        <div class="water-percentage" id="waterPercentage">75%</div>
+                    </div>
+                    <div class="water-label">Water Level</div>
+                </div>
+                <div class="alert-box" id="waterAlert">
+                    <span class="alert-icon">⚠️</span>
+                    <span class="alert-text">Critical: Water below 10%</span>
+                </div>
+            </div>
+
+            <!-- Temperature -->
+            <div class="card col-4">
+                <div class="card-header">
+                    <span class="card-icon">🌡️</span>
+                    <h2 class="card-title">Temperature</h2>
+                </div>
+                <div class="temp-display">
+                    <div class="temp-circle">
+                        <div class="temp-value" id="tempValue">22°C</div>
+                    </div>
+                    <div class="temp-label">Current Room Temperature</div>
+                </div>
+            </div>
+
+            <!-- Plant Information -->
+            <div class="card col-4">
+                <div class="card-header">
+                    <span class="card-icon">🌸</span>
+                    <h2 class="card-title">Plant Information</h2>
+                </div>
+                <div class="select-wrapper">
+                    <select id="flowerName" onchange="updateFlowerInfo()">
+                        <option value="">Select your plant...</option>
+                        <option value="rose">Rose</option>
+                        <option value="tulip">Tulip</option>
+                        <option value="orchid">Orchid</option>
+                        <option value="sunflower">Sunflower</option>
+                        <option value="lavender">Lavender</option>
+                        <option value="lily">Lily</option>
+                        <option value="daisy">Daisy</option>
+                    </select>
+                </div>
+                <div id="flowerInfo" class="plant-info">
+                    <div class="plant-name" id="flowerTitle"></div>
+                    <div class="plant-description" id="flowerDescription"></div>
+                </div>
+            </div>
+
+            <!-- CO2 Calculator -->
+            <div class="card col-6">
+                <div class="card-header">
+                    <span class="card-icon">🌍</span>
+                    <h2 class="card-title">CO₂ Reduction Calculator</h2>
+                </div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="roomLength">Length (m)</label>
+                        <input type="number" id="roomLength" placeholder="5.0" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="roomWidth">Width (m)</label>
+                        <input type="number" id="roomWidth" placeholder="4.0" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="roomHeight">Height (m)</label>
+                        <input type="number" id="roomHeight" placeholder="3.0" step="0.1">
+                    </div>
+                </div>
+                <button class="btn" onclick="calculateCO2()">Calculate Impact</button>
+                <div id="co2Result" class="co2-result">
+                    <div class="co2-value" id="co2Value"></div>
+                    <div class="co2-label">CO₂ absorbed by your plant per year</div>
+                    <div class="co2-stats">
+                        <div class="co2-stat">
+                            <div class="co2-stat-value"><span id="roomVolume"></span> m³</div>
+                            <div class="co2-stat-label">Room Volume</div>
+                        </div>
+                        <div class="co2-stat">
+                            <div class="co2-stat-value"><span id="co2InRoom"></span></div>
+                            <div class="co2-stat-label">CO₂ in Room</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="card col-6">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h2 class="card-title">Water Usage Trend</h2>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="waterChart" class="chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Watering History -->
+            <div class="card col-12">
+                <div class="card-header">
+                    <span class="card-icon">📋</span>
+                    <h2 class="card-title">Watering History</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalWaterings">24</div>
+                        <div class="stat-label">Total Waterings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalWaterUsed">12.8L</div>
+                        <div class="stat-label">Total Water Used</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="lastWatered">2h ago</div>
+                        <div class="stat-label">Last Watered</div>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Water Amount</th>
+                                <th>Before</th>
+                                <th>After</th>
+                                <th>Temperature</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
